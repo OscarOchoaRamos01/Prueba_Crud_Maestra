@@ -1,7 +1,5 @@
 package pe.edu.vallegrande.controller;
 
-
-
 import pe.edu.vallegrande.Dto.SparePartDto;
 import pe.edu.vallegrande.service.SparePartService;
 
@@ -11,14 +9,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.math.BigDecimal;
+import java.sql.Date;
 import java.util.List;
 
-@WebServlet({"/listar","/listarInactivo", "/editar", "/eliminar", "/create","/restaurar"})
+@WebServlet({"/listar", "/listarInactivo", "/editar", "/eliminar", "/create", "/restaurar"})
 public class SparePartController extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
+        SparePartService service = new SparePartService();
+
+        req.setAttribute("categories", service.getCategories());
+        req.setAttribute("brands", service.getBrands());
         switch (path) {
             case "/listar":
                 listarRepuestos(req, resp);
@@ -27,7 +30,6 @@ public class SparePartController extends HttpServlet {
                 listarRepuestosInactivo(req, resp);
                 break;
             default:
-
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND);
                 break;
         }
@@ -40,9 +42,9 @@ public class SparePartController extends HttpServlet {
             case "/editar":
                 editarRepuestos(req, resp);
                 break;
-                case "/eliminar":
-                    eliminarRepuestos(req, resp);
-                    break;
+            case "/eliminar":
+                eliminarRepuestos(req, resp);
+                break;
             case "/create":
                 crearRepuestos(req, resp);
                 break;
@@ -55,78 +57,20 @@ public class SparePartController extends HttpServlet {
         }
     }
 
-    private void restaurarRepuesto(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String idStr = req.getParameter("id");
-        int id = Integer.parseInt(idStr);
-
-
-        SparePartService sparePartService = new SparePartService();
-        sparePartService.Restaurar(id);
-
-
-        resp.sendRedirect(req.getContextPath() + "/listarInactivo");
-    }
-
-    private void crearRepuestos(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
-        SparePartService repuestoService = new SparePartService();
-        SparePartDto repuesto = new SparePartDto();
-
-        repuesto.setName(req.getParameter("name"));
-        repuesto.setDescription(req.getParameter("description"));
-        repuesto.setPriceUnit(BigDecimal.valueOf(Double.parseDouble(req.getParameter("priceUnit"))));
-        repuesto.setBrand(req.getParameter("brand"));
-        repuesto.setStock(Integer.parseInt(req.getParameter("stock")));
-        repuesto.setCompatibleModel(req.getParameter("compatibleModel"));
-        repuesto.setEntryDate(java.sql.Date.valueOf(req.getParameter("entryDate")));
-
-        repuestoService.insertSparePart(repuesto);
-
-        resp.sendRedirect("/listar");
-
-    }
-
-    private void eliminarRepuestos(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        String idStr = req.getParameter("id");
-        int id = Integer.parseInt(idStr);
-
-
-        SparePartService sparePartService = new SparePartService();
-        sparePartService.deleteSparePart(id);
-
-
-        resp.sendRedirect(req.getContextPath() + "/listar");
-    }
-
-
-    private void editarRepuestos(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        SparePartService repuestoService = new SparePartService();
-        SparePartDto repuesto = new SparePartDto();
-
-        repuesto.setId(Integer.parseInt(req.getParameter("id")));
-        repuesto.setName(req.getParameter("name"));
-        repuesto.setDescription(req.getParameter("description"));
-        repuesto.setPriceUnit(new BigDecimal(req.getParameter("priceUnit")));
-        repuesto.setBrand(req.getParameter("brand"));
-        repuesto.setStock(Integer.parseInt(req.getParameter("stock")));
-        repuesto.setCompatibleModel(req.getParameter("compatibleModel"));
-        repuesto.setEntryDate(java.sql.Date.valueOf(req.getParameter("entryDate")));
-
-        repuestoService.updateSparePart(repuesto);
-
-        resp.sendRedirect("listar");
-    }
-
-
     private void listarRepuestos(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String nombre = req.getParameter("nombre");
-        String marca = req.getParameter("marca");
+        String brandIdParam = req.getParameter("brandId");
 
-        List<SparePartDto> parts;
+        Integer brandId = null;
+        if (brandIdParam != null && !brandIdParam.isEmpty()) {
+            brandId = Integer.parseInt(brandIdParam);
+        }
+
         SparePartService sparePartService = new SparePartService();
+        List<SparePartDto> parts;
 
-        if (nombre != null && !nombre.isEmpty() || marca != null && !marca.isEmpty()) {
-            parts = sparePartService.buscarRepuestos(nombre != null ? nombre : "", marca != null ? marca : "");
+        if ((nombre != null && !nombre.isEmpty()) || brandId != null) {
+            parts = sparePartService.buscarRepuestos(nombre != null ? nombre : "", brandId);
         } else {
             parts = sparePartService.getSpareParts();
         }
@@ -135,23 +79,97 @@ public class SparePartController extends HttpServlet {
         req.getRequestDispatcher("SparePart.jsp").forward(req, resp);
     }
 
-
     private void listarRepuestosInactivo(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<SparePartDto> partsI;
-        SparePartService sparePartService = new SparePartService();
-
         String nombre = req.getParameter("nombre");
-        String marca = req.getParameter("marca");
+        String brandIdParam = req.getParameter("brandId");
 
-        if (nombre != null && !nombre.isEmpty() || marca != null && !marca.isEmpty()) {
-            partsI = sparePartService.buscarRepuestosInactivo(nombre != null ? nombre : "", marca != null ? marca : "");
+        Integer brandId = null;
+        if (brandIdParam != null && !brandIdParam.isEmpty()) {
+            brandId = Integer.parseInt(brandIdParam);
+        }
+
+        SparePartService sparePartService = new SparePartService();
+        List<SparePartDto> partsI;
+
+        // Filtrar por nombre y/o marca
+        if ((nombre != null && !nombre.isEmpty()) || brandId != null) {
+            partsI = sparePartService.buscarRepuestosInactivo(nombre != null ? nombre : "", brandId);
         } else {
             partsI = sparePartService.inactivo();
         }
 
-        System.out.println("Repuestos inactivos = " + partsI);
         req.setAttribute("partsI", partsI);
         req.getRequestDispatcher("SparePartInactivo.jsp").forward(req, resp);
     }
 
+    private void crearRepuestos(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        SparePartDto repuesto = new SparePartDto();
+
+        try {
+            // Campos requeridos
+            repuesto.setName(req.getParameter("name"));
+            repuesto.setDescription(req.getParameter("description"));
+            repuesto.setCompatibilityType(req.getParameter("compatibilityType"));
+            repuesto.setEntryDate(Date.valueOf(req.getParameter("entryDate")));
+            repuesto.setState("Activo");
+
+            // Validar parámetros
+            String categoryIdParam = req.getParameter("categoryId");
+            String brandIdParam = req.getParameter("brandId");
+
+            if (categoryIdParam == null || categoryIdParam.isEmpty()) {
+                throw new IllegalArgumentException("Debe seleccionar una categoría");
+            }
+            if (brandIdParam == null || brandIdParam.isEmpty()) {
+                throw new IllegalArgumentException("Debe seleccionar una marca");
+            }
+
+            repuesto.setCategoryId(Integer.parseInt(categoryIdParam));
+            repuesto.setBrandId(Integer.parseInt(brandIdParam));
+
+            // Servicio para insertar
+            SparePartService sparePartService = new SparePartService();
+            sparePartService.insertSparePart(repuesto);
+
+            resp.sendRedirect(req.getContextPath() + "/listar");
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Error al crear el repuesto: " + e.getMessage());
+        }
+    }
+
+    private void editarRepuestos(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        SparePartDto repuesto = new SparePartDto();
+
+        repuesto.setId(Integer.parseInt(req.getParameter("id")));
+        repuesto.setName(req.getParameter("name"));
+        repuesto.setDescription(req.getParameter("description"));
+        repuesto.setCompatibilityType(req.getParameter("compatibilityType"));
+        repuesto.setEntryDate(Date.valueOf(req.getParameter("entryDate")));
+        repuesto.setCategoryId(Integer.parseInt(req.getParameter("categoryId")));
+        repuesto.setBrandId(Integer.parseInt(req.getParameter("brandId")));
+
+        SparePartService sparePartService = new SparePartService();
+        sparePartService.updateSparePart(repuesto);
+
+        resp.sendRedirect(req.getContextPath() + "/listar");
+    }
+
+    private void eliminarRepuestos(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        int id = Integer.parseInt(req.getParameter("id"));
+
+        SparePartService sparePartService = new SparePartService();
+        sparePartService.deleteSparePart(id);
+
+        resp.sendRedirect(req.getContextPath() + "/listar");
+    }
+
+    private void restaurarRepuesto(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        int id = Integer.parseInt(req.getParameter("id"));
+
+        SparePartService sparePartService = new SparePartService();
+        sparePartService.Restaurar(id);
+
+        resp.sendRedirect(req.getContextPath() + "/listarInactivo");
+    }
 }

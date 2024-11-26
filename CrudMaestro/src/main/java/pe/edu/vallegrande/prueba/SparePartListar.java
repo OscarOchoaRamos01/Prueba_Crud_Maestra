@@ -20,13 +20,13 @@ public class SparePartListar {
                 System.out.println("ID: " + repuesto.getId());
                 System.out.println("Nombre: " + repuesto.getName());
                 System.out.println("Descripción: " + repuesto.getDescription());
-                System.out.println("Precio Unitario: " + repuesto.getPriceUnit());
-                System.out.println("Marca: " + repuesto.getBrand());
+                System.out.println("Tipo de Compatibilidad: " + repuesto.getCompatibilityType());
+                System.out.println("ID Categoría: " + repuesto.getCategoryId());
+                System.out.println("ID Marca: " + repuesto.getBrandId());
                 System.out.println("Stock: " + repuesto.getStock());
-                System.out.println("Modelo Compatible: " + repuesto.getCompatibleModel());
                 System.out.println("Fecha de Ingreso: " + repuesto.getEntryDate());
+                System.out.println("-----------------------------------");
             }
         }
     }
 }
-

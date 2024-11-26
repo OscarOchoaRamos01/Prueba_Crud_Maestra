@@ -7,17 +7,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Repuestos</title>
-    <!-- Bootstrap CSS --> <!-- Bootstrap CSS -->
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-        }
         .table {
             width: 100%;
             border-collapse: collapse;
@@ -127,43 +121,90 @@
             }
         }
 
-        /* Ajustes para que el menú ocupe todo el alto de la página */
+        /* Ajuste general del menú */
         .menu {
             min-height: 100vh;
-            width: 300px; /* Ancho del menú */
+            width: 300px;
+            background-color: #f8f9fa; /* Fondo claro */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+            border-right: 1px solid #dee2e6; /* Línea divisoria */
         }
-        /* Estilo para el icono activo */
+
+        /* Título del menú */
+        .menu h5 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        /* Espaciado en los elementos del menú */
+        .nav-item {
+            margin-bottom: 10px; /* Espaciado entre elementos */
+        }
+
+        /* Enlace del menú */
+        .nav-link {
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+            color: #495057;
+            padding: 12px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Hover y enlace activo */
+        .nav-link:hover,
         .nav-link.active {
             background-color: #e9ecef;
-            font-weight: bold;
+            color: #0d6efd; /* Color principal de Bootstrap */
+            font-weight: 500;
+            text-decoration: none;
         }
-        /* Aumentar el tamaño de los íconos */
+
+        /* Estilo de los íconos */
         .nav-link i {
-            font-size: 1.5rem; /* Tamaño del icono */
+            font-size: 1.5rem;
+            margin-right: 10px;
+            color: #6c757d; /* Color secundario */
+            transition: color 0.3s ease-in-out;
         }
-        /* Aumentar el tamaño de la fuente */
-        .nav-link {
-            font-size: 1.2rem; /* Tamaño de la fuente de los enlaces */
+
+        .nav-link:hover i,
+        .nav-link.active i {
+            color: #0d6efd; /* Ícono en estado activo o hover */
         }
-        /* Espaciado en el contenedor principal */
-        .content {
-            padding: 30px; /* Espaciado interno */
+
+        /* Submenú */
+        .dropdown-menu {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        /* Espaciado entre elementos del menú */
-        .nav-item {
-            margin-bottom: 15px; /* Espacio entre opciones del menú */
+
+        .dropdown-item {
+            font-size: 1rem;
+            color: #495057;
+            padding: 8px 15px;
+            transition: all 0.3s ease-in-out;
         }
+
+        .dropdown-item:hover {
+            background-color: #e9ecef;
+            color: #0d6efd;
+        }
+
     </style>
 </head>
 <body>
-
 <div class="d-flex">
     <!-- Menú vertical -->
     <div class="bg-light p-3 menu">
         <h5 class="pb-3 border-bottom">Menú</h5>
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link active d-flex align-items-center" href="/index.jsp"><i class="fas fa-home me-2"></i> Opción 1</a>
+                <a class="nav-link d-flex align-items-center" href="/index.jsp"><i class="fas fa-home me-2"></i> Opción 1</a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -180,28 +221,27 @@
                 <a class="nav-link d-flex align-items-center" href="/listar"><i class="fas fa-cog me-2"></i> Repuestos </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link d-flex align-items-center" href="#opcion4"><i class="fas fa-shopping-cart me-2"></i> Compra </a>
+                <a class="nav-link d-flex align-items-center" href="/Registrar_Compras"><i class="fas fa-shopping-cart me-2"></i> Compra </a>
             </li>
         </ul>
     </div>
 
+    <!-- Contenido principal -->
     <div class="p-4 flex-grow-1 content">
-        <h1 class="text-center my-4">Lista de Repuestos</h1>
+        <h1 class="text-center mb-4">Lista de Repuestos</h1>
 
         <div class="Busqueda mb-1">
             <form action="${pageContext.request.contextPath}/listar" method="get" class="d-flex" onsubmit="return validateForm()">
                 <input type="text" id="nombre" name="nombre" class="form-control me-2" placeholder="Nombre del repuesto" aria-label="Nombre del repuesto" oninput="toggleButton()"/>
-                <label for="brand" class="form-label me-2">Marca:</label>
-                <select id="marca" name="marca" class="form-select me-2" onchange="toggleButton()">
+
+                <label for="brandId-B" class="form-label me-2">Marca:</label>
+                <select id="brandId-B" name="brandId" class="form-select me-2" onchange="toggleButton()">
                     <option value="">Seleccione una marca</option>
-                    <option value="Toyota">Toyota</option>
-                    <option value="Honda">Honda</option>
-                    <option value="Ford">Ford</option>
-                    <option value="Chevrolet">Chevrolet</option>
-                    <option value="Nissan">Nissan</option>
-                    <option value="BMW">BMW</option>
-                    <option value="Audi">Audi</option>
+                    <c:forEach var="brand" items="${brands}">
+                        <option value="${brand.id}">${brand.name}</option>
+                    </c:forEach>
                 </select>
+
                 <button type="submit" id="searchButton" class="btn btn-primary" disabled>
                     <i class="bi bi-search"></i>
                 </button>
@@ -229,66 +269,71 @@
             <i class="bi bi-file-earmark-pdf"></i> Descargar PDF
         </button>
 
-        <!-- Modal para agregar repuesto -->
+        <!-- Modal agregar -->
         <div class="modal fade" id="addRepuestoModal" tabindex="-1" aria-labelledby="addRepuestoModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="addRepuestoModalLabel">Agregar Nuevo Repuesto</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form id="addRepuestoForm" action="/create" method="post" novalidate>
+                    <form action="/create" method="post" id="addRepuestoForm">
+                        <!-- Header -->
+                        <div class="modal-header bg-primary text-white">
+                            <h5 class="modal-title" id="addRepuestoModalLabel">Agregar Repuesto</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <!-- Body -->
                         <div class="modal-body">
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Nombre:</label>
-                                <input type="text" id="name" name="name" class="form-control" required>
-                                <div class="invalid-feedback">El nombre es obligatorio.</div>
+                            <div class="row g-3">
+                                <!-- Nombre -->
+                                <div class="col-md-6">
+                                    <label for="name" class="form-label">Nombre:</label>
+                                    <input type="text" id="name" name="name" class="form-control" placeholder="Ingrese el nombre del repuesto" required>
+                                </div>
+                                <!-- Descripción -->
+                                <div class="col-md-6">
+                                    <label for="description" class="form-label">Descripción:</label>
+                                    <textarea id="description" name="description" class="form-control" placeholder="Ingrese una breve descripción" rows="3" required></textarea>
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="description" class="form-label">Descripción:</label>
-                                <textarea id="description" name="description" class="form-control" required></textarea>
-                                <div class="invalid-feedback">La descripción es obligatoria.</div>
+                            <div class="row g-3 mt-3">
+                                <!-- Tipo de Compatibilidad -->
+                                <div class="col-md-6">
+                                    <label for="compatibilityType" class="form-label">Tipo de Calidad:</label>
+                                    <select id="compatibilityType" name="compatibilityType" class="form-select" required>
+                                        <option value="">Seleccione una opción</option>
+                                        <option value="Original">Original</option>
+                                        <option value="Generico">Generico</option>
+                                    </select>
+                                </div>
+                                <!-- Categoría -->
+                                <div class="col-md-6">
+                                    <label for="categoryId" class="form-label">Categoría:</label>
+                                    <select id="categoryId" name="categoryId" class="form-select" required>
+                                        <option value="">Seleccione una categoría</option>
+                                        <c:forEach var="category" items="${categories}">
+                                            <option value="${category.id}">${category.name}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="priceUnit" class="form-label">Precio:</label>
-                                <input type="number" step="0.10" id="priceUnit" name="priceUnit" class="form-control" required>
-                                <div class="invalid-feedback">El precio es obligatorio y debe ser un número positivo.</div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="brand" class="form-label">Marca:</label>
-                                <select id="brand" name="brand" class="form-control" required>
-                                    <option value="">Seleccione una marca</option>
-                                    <option value="Toyota">Toyota</option>
-                                    <option value="Honda">Honda</option>
-                                    <option value="Ford">Ford</option>
-                                    <option value="Chevrolet">Chevrolet</option>
-                                    <option value="Nissan">Nissan</option>
-                                    <option value="BMW">BMW</option>
-                                    <option value="Audi">Audi</option>
-                                </select>
-                                <div class="invalid-feedback">Seleccione una marca.</div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="stock" class="form-label">Stock:</label>
-                                <input type="number" id="stock" name="stock" class="form-control" required min="1">
-                                <div class="invalid-feedback">El stock debe ser un número entero.</div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="compatibleModel" class="form-label">Modelo Compatible:</label>
-                                <select id="compatibleModel" name="compatibleModel" class="form-control" required>
-                                    <option value="">Seleccione un modelo</option>
-                                    <option value="Original">Original</option>
-                                    <option value="Compatible">Compatible</option>
-                                </select>
-                                <div class="invalid-feedback">Seleccione un modelo compatible.</div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="entryDate" class="form-label">Fecha de Entrada:</label>
-                                <input type="date" id="entryDate" name="entryDate" class="form-control" required>
-                                <div class="invalid-feedback">La fecha de entrada es obligatoria.</div>
+                            <div class="row g-3 mt-3">
+                                <!-- Marca -->
+                                <div class="col-md-6">
+                                    <label for="brandId" class="form-label">Marca:</label>
+                                    <select id="brandId" name="brandId" class="form-select" required>
+                                        <option value="">Seleccione una marca</option>
+                                        <c:forEach var="brand" items="${brands}">
+                                            <option value="${brand.id}">${brand.name}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <!-- Fecha de Entrada -->
+                                <div class="col-md-6">
+                                    <label for="entryDate" class="form-label">Fecha de Entrada:</label>
+                                    <input type="date" id="entryDate" name="entryDate" class="form-control" required>
+                                </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
+                        <!-- Footer -->
+                        <div class="modal-footer bg-light">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                             <button type="submit" class="btn btn-primary">Guardar</button>
                         </div>
@@ -297,21 +342,21 @@
             </div>
         </div>
 
+        <!-- Tabla -->
         <div id="printableArea">
-            <!-- Lista de Repuestos -->
             <table class="table mt-4" id="partsTable">
                 <thead>
                 <tr>
                     <th>ID</th>
-                    <th>NOMBRE</th>
-                    <th>DESCRIPCIÓN</th>
-                    <th>PRECIO</th>
-                    <th>MARCA</th>
-                    <th>STOCK</th>
-                    <th>MODELO COMPATIBLE</th>
-                    <th>FECHA DE ENTRADA</th>
-                    <th>ESTADO</th>
-                    <th>ACCIONES</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Tipo de Compatibilidad</th>
+                    <th>Categoría</th>
+                    <th>Marca</th>
+                    <th>Stock</th>
+                    <th>Fecha de Entrada</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -320,22 +365,33 @@
                         <td>${repuesto.id}</td>
                         <td>${repuesto.name}</td>
                         <td>${repuesto.description}</td>
-                        <td>S/. <fmt:formatNumber value="${repuesto.priceUnit}" pattern="#,##0.00"/></td>
-                        <td>${repuesto.brand}</td>
+                        <td>${repuesto.compatibilityType}</td>
+                        <td>${repuesto.categoryName}</td> <!-- Mostrar nombre de la categoría -->
+                        <td>${repuesto.brandName}</td>    <!-- Mostrar nombre de la marca -->
                         <td>${repuesto.stock}</td>
-                        <td>${repuesto.compatibleModel}</td>
                         <td><fmt:formatDate value="${repuesto.entryDate}" pattern="dd-MMM-yyyy"/></td>
                         <td>
-                            <span class="badge bg-secondary">${repuesto.state}</span>
+                    <span class="badge ${repuesto.state == 'A' ? 'bg-success' : 'bg-secondary'}">
+                            ${repuesto.state}
+                    </span>
                         </td>
                         <td>
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal"
-                                    data-id="${repuesto.id}" data-name="${repuesto.name}" data-description="${repuesto.description}"
-                                    data-price="${repuesto.priceUnit}" data-brand="${repuesto.brand}" data-stock="${repuesto.stock}"
-                                    data-model="${repuesto.compatibleModel}" data-date="${repuesto.entryDate}">
+                            <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#editRepuestoModal"
+                                    data-id="${repuesto.id}"
+                                    data-name="${repuesto.name}"
+                                    data-description="${repuesto.description}"
+                                    data-compatibilityType="${repuesto.compatibilityType}"
+                                    data-categoryId="${repuesto.categoryId}"
+                                    data-brandId="${repuesto.brandId}"
+                                    data-entryDate="${repuesto.entryDate}"
+                                    onclick="loadEditModal(event)">
                                 <i class="bi bi-pencil"></i>
                             </button>
-                            <form action="/eliminar" method="post" style="display: inline;" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este repuesto?');">
+                            <form action="/eliminar" method="post" style="display:inline;" onsubmit="return confirm('¿Está seguro de eliminar este repuesto?');">
                                 <input type="hidden" name="id" value="${repuesto.id}">
                                 <button type="submit" class="btn btn-danger">
                                     <i class="bi bi-trash"></i>
@@ -348,64 +404,52 @@
             </table>
         </div>
 
-        <!-- Modal para editar repuesto -->
-        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <!-- Modal editar -->
+        <div class="modal fade" id="editRepuestoModal" tabindex="-1" aria-labelledby="editRepuestoModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editModalLabel">Editar Repuesto</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form id="editRepuestoForm" action="/editar" method="post" novalidate>
+                    <form action="/editar" method="post" id="editRepuestoForm">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editRepuestoModalLabel">Editar Repuesto</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
                         <div class="modal-body">
                             <input type="hidden" id="edit-id" name="id">
                             <div class="mb-3">
                                 <label for="edit-name" class="form-label">Nombre:</label>
                                 <input type="text" id="edit-name" name="name" class="form-control" required>
-                                <div class="invalid-feedback">El nombre es obligatorio.</div>
                             </div>
                             <div class="mb-3">
                                 <label for="edit-description" class="form-label">Descripción:</label>
                                 <textarea id="edit-description" name="description" class="form-control" required></textarea>
-                                <div class="invalid-feedback">La descripción es obligatoria.</div>
                             </div>
                             <div class="mb-3">
-                                <label for="edit-priceUnit" class="form-label">Precio:</label>
-                                <input type="number" step="0.10" id="edit-priceUnit" name="priceUnit" class="form-control" required>
-                                <div class="invalid-feedback">El precio es obligatorio y debe ser un número positivo.</div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="edit-brand" class="form-label">Marca:</label>
-                                <select id="edit-brand" name="brand" class="form-control" required>
-                                    <option value="">Seleccione una marca</option>
-                                    <option value="Toyota">Toyota</option>
-                                    <option value="Honda">Honda</option>
-                                    <option value="Ford">Ford</option>
-                                    <option value="Chevrolet">Chevrolet</option>
-                                    <option value="Nissan">Nissan</option>
-                                    <option value="BMW">BMW</option>
-                                    <option value="Audi">Audi</option>
-                                </select>
-                                <div class="invalid-feedback">Seleccione una marca.</div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="edit-stock" class="form-label">Stock:</label>
-                                <input type="number" id="edit-stock" name="stock" class="form-control" required min="1">
-                                <div class="invalid-feedback">El stock debe ser un número entero y mayor que cero.</div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="edit-compatibleModel" class="form-label">Modelo Compatible:</label>
-                                <select id="edit-compatibleModel" name="compatibleModel" class="form-control" required>
-                                    <option value="">Seleccione un modelo</option>
+                                <label for="edit-compatibilityType" class="form-label">Tipo de Calidad:</label>
+                                <select id="edit-compatibilityType" name="compatibilityType" class="form-select" required>
+                                    <option value="">Seleccione una opción</option>
                                     <option value="Original">Original</option>
-                                    <option value="Compatible">Compatible</option>
+                                    <option value="Generico">Generico</option>
                                 </select>
-                                <div class="invalid-feedback">Seleccione un modelo compatible.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editCategoryId" class="form-label">Categoría:</label>
+                                <select id="editCategoryId" name="categoryId" class="form-select" required>
+                                    <c:forEach var="category" items="${categories}">
+                                        <option value="${category.id}" ${category.id == sparePart.categoryId ? 'selected' : ''}>${category.name}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editBrandId" class="form-label">Marca:</label>
+                                <select id="editBrandId" name="brandId" class="form-select" required>
+                                    <c:forEach var="brand" items="${brands}">
+                                        <option value="${brand.id}" ${brand.id == sparePart.brandId ? 'selected' : ''}>${brand.name}</option>
+                                    </c:forEach>
+                                </select>
                             </div>
                             <div class="mb-3">
                                 <label for="edit-entryDate" class="form-label">Fecha de Entrada:</label>
                                 <input type="date" id="edit-entryDate" name="entryDate" class="form-control" required>
-                                <div class="invalid-feedback">La fecha de entrada es obligatoria.</div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -419,119 +463,225 @@
     </div>
 </div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 <script>
-    let totalAmount = 0;
-    const selectedProducts = [];
 
-    function addProduct() {
-        const productSelect = document.getElementById("product");
-        const quantityInput = document.getElementById("quantity");
-
-        const productId = productSelect.value;
-        const productName = productSelect.options[productSelect.selectedIndex]?.getAttribute("data-name");
-        const priceUnit = parseFloat(productSelect.options[productSelect.selectedIndex]?.getAttribute("data-price"));
-        const quantity = parseInt(quantityInput.value);
-
-        // Validaciones
-        if (!productId || !quantity || quantity <= 0) {
-            alert("Seleccione un producto y una cantidad válida.");
-            return;
-        }
-
-        const subtotal = (priceUnit * quantity).toFixed(2); // Aseguramos precisión de dos decimales
-        totalAmount += parseFloat(subtotal);
-
-        // Actualizamos la memoria de productos seleccionados
-        selectedProducts.push({ productId, productName, quantity, subtotal });
-
-        // Renderizamos la tabla
-        renderTable();
-
-        // Limpiamos los campos del formulario
-        productSelect.value = "";
-        quantityInput.value = "";
-    }
-
-    function renderTable() {
-        const tableBody = document.getElementById("purchaseDetailsTable").querySelector("tbody");
-        tableBody.innerHTML = ""; // Limpiamos antes de redibujar
-
-        selectedProducts.forEach((product, index) => {
-            const row = `
-        <tr>
-          <td>${product.productName}</td>
-          <td>S/. ${parseFloat(product.subtotal / product.quantity).toFixed(2)}</td>
-          <td>${product.quantity}</td>
-          <td>S/. ${product.subtotal}</td>
-          <td>
-            <button type="button" class="btn btn-danger btn-sm" onclick="removeProduct(${index})">Eliminar</button>
-          </td>
-        </tr>
-      `;
-            tableBody.insertAdjacentHTML("beforeend", row);
-        });
-
-        updateTotals();
-    }
-
-    function removeProduct(index) {
-        // Eliminamos el producto de la memoria
-        const removedProduct = selectedProducts.splice(index, 1)[0];
-        totalAmount -= parseFloat(removedProduct.subtotal);
-
-        // Redibujamos la tabla
-        renderTable();
-    }
-
-    function updateTotals() {
-        const discount = (totalAmount * 0.18).toFixed(2); // Calculamos el IGV con 2 decimales
-        document.getElementById("totalAmount").textContent = totalAmount.toFixed(2);
-        document.getElementById("discount").textContent = discount;
-    }
-
-    function submitForm() {
-        const supplierId = document.getElementById("supplier").value;
-        const paymentMethod = document.getElementById("paymentMethod").value;
-
-        if (!supplierId || selectedProducts.length === 0) {
-            alert("Debe seleccionar un proveedor y agregar productos.");
-            return;
-        }
-
-        const data = {
-            supplierId,
-            paymentMethod,
-            totalAmount: totalAmount.toFixed(2),
-            discount: (totalAmount * 0.18).toFixed(2),
-            products: selectedProducts,
+    document.addEventListener("DOMContentLoaded", function () {
+        // Validaciones para el formulario de agregar repuesto
+        const addForm = document.getElementById("addRepuestoForm");
+        const addFields = {
+            name: {
+                element: document.getElementById("name"),
+                validate: function () {
+                    return checkRequired(this.element, "Por favor, complete este campo.");
+                }
+            },
+            description: {
+                element: document.getElementById("description"),
+                validate: function () {
+                    return checkRequired(this.element, "Por favor, complete este campo.");
+                }
+            },
+            compatibilityType: {
+                element: document.getElementById("compatibilityType"),
+                validate: function () {
+                    const isValid = this.element.value !== "";
+                    toggleValidity(this.element, isValid, "Seleccione un tipo de compatibilidad.");
+                    return isValid;
+                }
+            },
+            categoryId: {
+                element: document.getElementById("categoryId"),
+                validate: function () {
+                    const isValid = this.element.value !== "";
+                    toggleValidity(this.element, isValid, "Seleccione una categoría.");
+                    return isValid;
+                }
+            },
+            brandId: {
+                element: document.getElementById("brandId"),
+                validate: function () {
+                    const isValid = this.element.value !== "";
+                    toggleValidity(this.element, isValid, "Seleccione una marca.");
+                    return isValid;
+                }
+            },
+            entryDate: {
+                element: document.getElementById("entryDate"),
+                validate: function () {
+                    return checkRequired(this.element, "Ingrese una fecha válida.");
+                }
+            }
         };
 
-        fetch("/RegistrarCompra", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        })
-            .then((response) => {
-                if (response.ok) {
-                    alert("Compra registrada exitosamente.");
-                    location.reload();
-                } else {
-                    alert("Error al registrar la compra.");
+        // Validaciones para el formulario de editar repuesto
+        const editForm = document.getElementById("editRepuestoForm");
+        const editFields = {
+            name: {
+                element: document.getElementById("edit-name"),
+                validate: function () {
+                    return checkRequired(this.element, "Por favor, complete este campo.");
                 }
-            })
-            .catch((error) => {
-                console.error("Error:", error);
-                alert("Ocurrió un error al procesar la solicitud.");
-            });
+            },
+            description: {
+                element: document.getElementById("edit-description"),
+                validate: function () {
+                    return checkRequired(this.element, "Por favor, complete este campo.");
+                }
+            },
+            compatibilityType: {
+                element: document.getElementById("edit-compatibilityType"),
+                validate: function () {
+                    const isValid = this.element.value !== "";
+                    toggleValidity(this.element, isValid, "Seleccione un tipo de compatibilidad.");
+                    return isValid;
+                }
+            },
+            categoryId: {
+                element: document.getElementById("editCategoryId"),
+                validate: function () {
+                    const isValid = this.element.value !== "";
+                    toggleValidity(this.element, isValid, "Seleccione una categoría.");
+                    return isValid;
+                }
+            },
+            brandId: {
+                element: document.getElementById("editBrandId"),
+                validate: function () {
+                    const isValid = this.element.value !== "";
+                    toggleValidity(this.element, isValid, "Seleccione una marca.");
+                    return isValid;
+                }
+            },
+            entryDate: {
+                element: document.getElementById("edit-entryDate"),
+                validate: function () {
+                    return checkRequired(this.element, "Ingrese una fecha válida.");
+                }
+            }
+        };
+
+        // Eventos de validación en tiempo real para agregar
+        Object.values(addFields).forEach(field => {
+            field.element.addEventListener("input", field.validate.bind(field));
+            if (field.element.tagName === "SELECT") {
+                field.element.addEventListener("change", field.validate.bind(field));
+            }
+        });
+
+        // Validación general al enviar el formulario de agregar
+        addForm.addEventListener("submit", function (event) {
+            const isFormValid = Object.values(addFields).every(field => field.validate());
+            if (!isFormValid) {
+                event.preventDefault();
+            }
+        });
+
+        // Eventos de validación en tiempo real para editar
+        Object.values(editFields).forEach(field => {
+            field.element.addEventListener("input", field.validate.bind(field));
+            if (field.element.tagName === "SELECT") {
+                field.element.addEventListener("change", field.validate.bind(field));
+            }
+        });
+
+        // Validación general al enviar el formulario de editar
+        editForm.addEventListener("submit", function (event) {
+            const isFormValid = Object.values(editFields).every(field => field.validate());
+            if (!isFormValid) {
+                event.preventDefault();
+            }
+        });
+
+        // Función para alternar clases de validación y mensajes de error
+        function toggleValidity(element, isValid, message) {
+            if (isValid) {
+                element.setCustomValidity("");
+                element.classList.add("is-valid");
+                element.classList.remove("is-invalid");
+            } else {
+                element.setCustomValidity(message);
+                element.classList.add("is-invalid");
+                element.classList.remove("is-valid");
+            }
+        }
+
+        // Función para campos requeridos
+        function checkRequired(element, message) {
+            const isValid = element.value.trim() !== "";
+            toggleValidity(element, isValid, message);
+            return isValid;
+        }
+    });
+
+    // Código para permitir que la búsqueda funcione, poniendo al menos un campo seleccionado
+    function toggleButton() {
+        const nombre = document.getElementById("nombre").value.trim();
+        const marca = document.getElementById("brandId-B").value; // Cambiado a brandId
+        const searchButton = document.getElementById("searchButton");
+
+        // Habilita el botón si al menos uno de los campos tiene un valor
+        searchButton.disabled = !(nombre || marca);
     }
+
+    function validateForm() {
+        return !document.getElementById("searchButton").disabled;
+    }
+    // Fin del código para habilitar la búsqueda con al menos un campo seleccionado
+
+    document.getElementById('editRepuestoModal').addEventListener('hidden.bs.modal', function () {
+        const backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) {
+            backdrop.remove();
+        }
+    });
+
+    // Llenar el modal de edición con los datos del repuesto seleccionado
+    function loadEditModal(event) {
+        const button = event.currentTarget; // Botón que activó el modal
+
+        // Extraer los valores de los atributos data-*
+        const id = button.getAttribute('data-id');
+        const name = button.getAttribute('data-name');
+        const description = button.getAttribute('data-description');
+        const compatibilityType = button.getAttribute('data-compatibilityType');
+        const categoryId = button.getAttribute('data-categoryId');
+        const brandId = button.getAttribute('data-brandId');
+        const entryDate = button.getAttribute('data-entryDate');
+
+        // Asignar los valores a los campos del modal
+        document.getElementById('edit-id').value = id;
+        document.getElementById('edit-name').value = name;
+        document.getElementById('edit-description').value = description;
+        document.getElementById('edit-compatibilityType').value = compatibilityType;
+        document.getElementById('editCategoryId').value = categoryId;
+        document.getElementById('editBrandId').value = brandId;
+        document.getElementById('edit-entryDate').value = entryDate;
+
+        // Mostrar el modal
+        new bootstrap.Modal(document.getElementById('editRepuestoModal')).show();
+    }
+
+    function downloadPDFWithBrowserPrint() {
+        window.print();
+    }
+    document.querySelector('#browserPrint').addEventListener('click', downloadPDFWithBrowserPrint);
+
+    function exportTableToExcel(tableID, filename = '') {
+        let table = document.getElementById(tableID);
+        let wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
+        XLSX.writeFile(wb, filename ? filename + '.xlsx' : 'Repuestos.xlsx');
+    }
+
+    // Establecer la fecha máxima al cargar la página
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date().toISOString().split('T')[0];
+        // Establecer max para ambos elementos por separado
+        document.getElementById('entryDate').setAttribute('max', today);
+        document.getElementById('edit-entryDate').setAttribute('max', today);
+    });
 </script>
 </body>
 </html>
-
-
-

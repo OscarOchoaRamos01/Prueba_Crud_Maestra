@@ -49,7 +49,7 @@ public class SupplierService {
     // Método para listar todos los proveedores activos
     public List<SupplierDto> getSuppliers() {
         List<SupplierDto> suppliers = new ArrayList<>();
-        String sql = "SELECT * FROM Supplier WHERE status = 'A'";
+        String sql = "SELECT id, RUC, Empresa, status, Contacto FROM Supplier WHERE status = 'A'";
         try {
             con = AccesoDB.getConnection();
             ps = con.prepareStatement(sql);
@@ -58,9 +58,8 @@ public class SupplierService {
                 SupplierDto supplier = new SupplierDto();
                 supplier.setId(rs.getInt("id"));
                 supplier.setRuc(rs.getString("RUC"));
-                supplier.setCompany(rs.getString("company"));
-                supplier.setContact(rs.getString("contact"));
-                supplier.setTelefono(rs.getString("telefono"));
+                supplier.setCompany(rs.getString("Empresa")); // Ajustado
+                supplier.setContact(rs.getString("Contacto")); // Ajustado
                 supplier.setStatus(rs.getString("status"));
                 suppliers.add(supplier);
             }

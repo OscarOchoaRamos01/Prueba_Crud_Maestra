@@ -4,18 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import java.math.BigDecimal;
-import java.sql.Date;
 
 @ToString
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PurcharseDto {
-    private int id;
-    private Date date;
-    private BigDecimal totalAmount;
-    private String paymentMethod;
+public class BrandDto {
+    private int id; // ID de la marca
+    private String name; // Nombre de la marca
     private String status;
-    private int supplierId;
 }

@@ -24,6 +24,7 @@ public class PurchasePageController extends HttpServlet {
         List<SupplierDto> suppliers = supplierService.getSuppliers();
         List<SparePartDto> spareParts = sparePartService.getSpareParts();
 
+
         // Enviar datos al JSP
         request.setAttribute("suppliers", suppliers);
         request.setAttribute("spareParts", spareParts);

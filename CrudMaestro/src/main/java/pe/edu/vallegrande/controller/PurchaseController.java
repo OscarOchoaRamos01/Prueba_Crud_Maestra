@@ -27,7 +27,8 @@ public class PurchaseController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            // Leer datos JSON del cuerpo de la solicitud
+            System.out.println("Procesando solicitud POST...");
+
             BufferedReader reader = request.getReader();
             StringBuilder json = new StringBuilder();
             String line;
@@ -35,20 +36,18 @@ public class PurchaseController extends HttpServlet {
                 json.append(line);
             }
 
-            // Convertir JSON a objetos
+            System.out.println("JSON recibido: " + json.toString());
+
             Gson gson = new Gson();
             JsonObject data = gson.fromJson(json.toString(), JsonObject.class);
 
-            // Procesar cabecera de la compra
-            PurcharseDto purcharseDto = new PurcharseDto();
-            purcharseDto.setSupplierId(data.get("supplierId").getAsInt());
-            purcharseDto.setPaymentMethod(data.get("paymentMethod").getAsString());
-            purcharseDto.setTotalAmount(new BigDecimal(data.get("totalAmount").getAsString()));
-            purcharseDto.setDiscount(new BigDecimal(data.get("discount").getAsString()));
-            purcharseDto.setDate(new Date(System.currentTimeMillis())); // Fecha del sistema
-            purcharseDto.setStatus("COMPLETED");
+            PurcharseDto purchaseDto = new PurcharseDto();
+            purchaseDto.setSupplierId(data.get("supplierId").getAsInt());
+            purchaseDto.setPaymentMethod(data.get("paymentMethod").getAsString());
+            purchaseDto.setTotalAmount(new BigDecimal(data.get("totalAmount").getAsString()));
+            purchaseDto.setDate(new Date(System.currentTimeMillis()));
+            purchaseDto.setStatus("A");
 
-            // Procesar detalles de la compra
             List<PurcharseDetailDto> details = new ArrayList<>();
             JsonArray products = data.getAsJsonArray("products");
 
@@ -57,12 +56,15 @@ public class PurchaseController extends HttpServlet {
                 PurcharseDetailDto detail = new PurcharseDetailDto();
                 detail.setSparePartsId(product.get("productId").getAsInt());
                 detail.setQuantity(product.get("quantity").getAsInt());
+                detail.setPriceUnit(new BigDecimal(product.get("priceUnit").getAsString()));
                 detail.setSubtotal(new BigDecimal(product.get("subtotal").getAsString()));
                 details.add(detail);
             }
 
-            // Registrar compra
-            boolean success = purchaseService.registrarCompra(purcharseDto, details);
+            System.out.println("Cabecera de compra: " + purchaseDto);
+            System.out.println("Detalles de compra: " + details);
+
+            boolean success = purchaseService.registrarCompra(purchaseDto, details);
 
             if (success) {
                 response.setStatus(HttpServletResponse.SC_OK);
@@ -72,7 +74,9 @@ public class PurchaseController extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("Error: " + e.getMessage());
         }
     }
 }
+
 

@@ -14,6 +14,7 @@ public class PurcharseDetailDto {
     private int id;
     private int quantity;
     private BigDecimal subtotal;
-    private int purchaseId;
+    private BigDecimal priceUnit; // Nuevo campo agregado
     private int sparePartsId;
+    private int purchaseId;
 }

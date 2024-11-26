@@ -16,10 +16,12 @@ public class SparePartDto {
     private int id;
     private String name;
     private String description;
-    private BigDecimal priceUnit;
-    private String brand;
+    private String compatibilityType;
     private int stock;
-    private String compatibleModel;
     private Date entryDate;
     private String state;
+    private int categoryId;
+    private int brandId;
+    private String categoryName;
+    private String brandName;
 }
