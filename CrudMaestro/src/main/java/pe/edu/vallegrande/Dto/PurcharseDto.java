@@ -18,4 +18,5 @@ public class PurcharseDto {
     private String paymentMethod;
     private String status;
     private int supplierId;
+    private String supplierName; // Nuevo campo
 }

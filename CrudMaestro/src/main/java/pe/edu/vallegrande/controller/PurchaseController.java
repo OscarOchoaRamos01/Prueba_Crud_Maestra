@@ -1,82 +1,63 @@
 package pe.edu.vallegrande.controller;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import pe.edu.vallegrande.Dto.PurcharseDetailDto;
 import pe.edu.vallegrande.Dto.PurcharseDto;
-import pe.edu.vallegrande.service.PurcharseService;
+import pe.edu.vallegrande.service.PurcharseDetailService;
+import pe.edu.vallegrande.service.PurchaseService;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet("/RegistrarCompra")
+@WebServlet("/ComprasDetalles")
 public class PurchaseController extends HttpServlet {
-    private PurcharseService purchaseService = new PurcharseService();
+
+    private PurchaseService purchaseService = new PurchaseService();
+    private PurcharseDetailService purcharseDetailService = new PurcharseDetailService();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("application/json; charset=UTF-8"); // Establecer UTF-8
+        response.setCharacterEncoding("UTF-8");
+
         try {
-            System.out.println("Procesando solicitud POST...");
-
-            BufferedReader reader = request.getReader();
-            StringBuilder json = new StringBuilder();
+            // Leer el ID de la compra desde el cuerpo de la solicitud
+            StringBuilder sb = new StringBuilder();
             String line;
-            while ((line = reader.readLine()) != null) {
-                json.append(line);
+            while ((line = request.getReader().readLine()) != null) {
+                sb.append(line);
             }
-
-            System.out.println("JSON recibido: " + json.toString());
 
             Gson gson = new Gson();
-            JsonObject data = gson.fromJson(json.toString(), JsonObject.class);
+            JsonObject jsonRequest = gson.fromJson(sb.toString(), JsonObject.class);
+            int purchaseId = jsonRequest.get("id").getAsInt();
 
-            PurcharseDto purchaseDto = new PurcharseDto();
-            purchaseDto.setSupplierId(data.get("supplierId").getAsInt());
-            purchaseDto.setPaymentMethod(data.get("paymentMethod").getAsString());
-            purchaseDto.setTotalAmount(new BigDecimal(data.get("totalAmount").getAsString()));
-            purchaseDto.setDate(new Date(System.currentTimeMillis()));
-            purchaseDto.setStatus("A");
-
-            List<PurcharseDetailDto> details = new ArrayList<>();
-            JsonArray products = data.getAsJsonArray("products");
-
-            for (JsonElement element : products) {
-                JsonObject product = element.getAsJsonObject();
-                PurcharseDetailDto detail = new PurcharseDetailDto();
-                detail.setSparePartsId(product.get("productId").getAsInt());
-                detail.setQuantity(product.get("quantity").getAsInt());
-                detail.setPriceUnit(new BigDecimal(product.get("priceUnit").getAsString()));
-                detail.setSubtotal(new BigDecimal(product.get("subtotal").getAsString()));
-                details.add(detail);
+            // Obtener datos generales de la compra
+            PurcharseDto purchase = purchaseService.getPurchaseById(purchaseId);
+            if (purchase == null) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                response.getWriter().write("Compra no encontrada.");
+                return;
             }
 
-            System.out.println("Cabecera de compra: " + purchaseDto);
-            System.out.println("Detalles de compra: " + details);
+            // Obtener detalles de la compra
+            List<PurcharseDetailDto> details = purcharseDetailService.getPurchaseDetailsByPurchaseId(purchaseId);
 
-            boolean success = purchaseService.registrarCompra(purchaseDto, details);
+            // Crear respuesta JSON
+            JsonObject jsonResponse = new JsonObject();
+            jsonResponse.add("purchase", gson.toJsonTree(purchase));
+            jsonResponse.add("details", gson.toJsonTree(details));
 
-            if (success) {
-                response.setStatus(HttpServletResponse.SC_OK);
-            } else {
-                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            }
+            response.getWriter().write(gson.toJson(jsonResponse));
+
         } catch (Exception e) {
-            e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("Error: " + e.getMessage());
+            response.getWriter().write("Error al obtener los datos: " + e.getMessage());
         }
     }
 }
-
-

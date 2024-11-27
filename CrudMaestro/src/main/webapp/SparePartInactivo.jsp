@@ -164,7 +164,7 @@
         <a class="nav-link" href="/listar"><i class="fas fa-cog"></i> Repuestos</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/Registrar_Compras"><i class="fas fa-shopping-cart"></i> Compra</a>
+        <a class="nav-link" href="/Compras"><i class="fas fa-shopping-cart"></i> Compra</a>
       </li>
     </ul>
   </div>

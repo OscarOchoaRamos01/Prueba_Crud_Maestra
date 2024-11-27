@@ -1,9 +1,7 @@
 package pe.edu.vallegrande.controller;
 
-import pe.edu.vallegrande.Dto.SupplierDto;
-import pe.edu.vallegrande.Dto.SparePartDto;
-import pe.edu.vallegrande.service.SupplierService;
-import pe.edu.vallegrande.service.SparePartService;
+import pe.edu.vallegrande.Dto.PurcharseDto;
+import pe.edu.vallegrande.service.PurchaseService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,23 +11,20 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/Registrar_Compras")
+@WebServlet("/Compras")
 public class PurchasePageController extends HttpServlet {
-    private SupplierService supplierService = new SupplierService();
-    private SparePartService sparePartService = new SparePartService();
+
+    private PurchaseService purchaseService = new PurchaseService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Cargar proveedores y repuestos
-        List<SupplierDto> suppliers = supplierService.getSuppliers();
-        List<SparePartDto> spareParts = sparePartService.getSpareParts();
+        // Obtener todas las compras
+        List<PurcharseDto> purchases = purchaseService.listarCompras();
 
-
-        // Enviar datos al JSP
-        request.setAttribute("suppliers", suppliers);
-        request.setAttribute("spareParts", spareParts);
+        // Pasar los datos al JSP
+        request.setAttribute("purchases", purchases);
 
         // Despachar al JSP
-        request.getRequestDispatcher("purcharse.jsp").forward(request, response);
+        request.getRequestDispatcher("purchase.jsp").forward(request, response);
     }
 }

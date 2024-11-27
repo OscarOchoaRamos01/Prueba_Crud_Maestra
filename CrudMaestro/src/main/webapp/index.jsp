@@ -132,7 +132,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link d-flex align-items-center" href="/Registrar_Compras">
+                <a class="nav-link d-flex align-items-center" href="/Compras">
                     <i class="fas fa-shopping-cart me-2"></i> Compra
                 </a>
             </li>

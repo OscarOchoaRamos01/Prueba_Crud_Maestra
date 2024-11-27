@@ -17,4 +17,5 @@ public class PurcharseDetailDto {
     private BigDecimal priceUnit; // Nuevo campo agregado
     private int sparePartsId;
     private int purchaseId;
+    private String sparePartName; // Nombre del repuesto
 }

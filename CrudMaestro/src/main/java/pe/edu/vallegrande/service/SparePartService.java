@@ -287,33 +287,6 @@ public class SparePartService {
         return spareParts;
     }
 
-    public SparePartDto buscarRepuestoPorId(int id) {
-        SparePartDto sparePart = null;
-        String sql = "SELECT * FROM spare_parts WHERE id = ? AND state = 'A'";
-        try (Connection cn = AccesoDB.getConnection();
-             PreparedStatement ps = cn.prepareStatement(sql)) {
-
-            ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    sparePart = new SparePartDto();
-                    sparePart.setId(rs.getInt("id"));
-                    sparePart.setName(rs.getString("name"));
-                    sparePart.setDescription(rs.getString("description"));
-                    sparePart.setCompatibilityType(rs.getString("compatibility_type"));
-                    sparePart.setStock(rs.getInt("stock"));
-                    sparePart.setEntryDate(rs.getDate("entry_date"));
-                    sparePart.setState(rs.getString("state"));
-                    sparePart.setCategoryId(rs.getInt("category_id"));
-                    sparePart.setBrandId(rs.getInt("brand_id"));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return sparePart;
-    }
-
     public List<BrandDto> getBrands() {
         List<BrandDto> brands = new ArrayList<>();
         Connection cn = null;
